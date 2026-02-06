@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Exchngers (XE) | Premier Crypto Exchange</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. UI GOD VARIABLES --- */
+        :root {
+            --bg-deep: #030304;
+            --bg-glass: rgba(255, 255, 255, 0.02);
+            --bg-card: rgba(20, 20, 22, 0.6);
+            
+            --accent-primary: #00f0ff; /* Cyber Cyan */
+            --accent-secondary: #7000ff; /* Deep Violet */
+            --accent-orange: #ff5e3a; /* Alert Orange */
+            --accent-telegram: #2AABEE;
+            
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            
+            --font-head: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        html, body {
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 25%);
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: var(--font-body);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body { padding-top: 80px; }
+
+        /* --- 2. NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            background: rgba(3, 3, 4, 0.7); 
+            backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .logo { 
+            display: flex; align-items: center; gap: 12px; 
+            text-decoration: none; color: white; font-family: var(--font-head);
+            font-weight: 700; font-size: 20px; letter-spacing: -0.5px;
+        }
+        .logo-img { height: 36px; width: auto; border-radius: 8px; }
+
+        /* NAV LINKS BASE STYLES */
+        .nav-links a { 
+            color: var(--text-muted); text-decoration: none; font-size: 14px; 
+            font-weight: 500; transition: color 0.3s ease;
+            position: relative;
+        }
+        .nav-links a:not(.nav-cta-item):hover { color: white; }
+
+        /* Premium CTA Button */
+        .nav-cta-item {
+            background: linear-gradient(135deg, var(--accent-telegram), #0077ff);
+            color: white !important;
+            padding: 12px 28px;
+            border-radius: 100px;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 20px rgba(42, 171, 238, 0.3);
+            transition: transform 0.3s var(--ease-elastic), box-shadow 0.3s ease !important;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-cta-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(42, 171, 238, 0.5);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn { display: flex; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1001; }
+        .bar { width: 26px; height: 2px; background: white; border-radius: 4px; transition: 0.4s var(--ease-smooth); }
+        .mobile-menu-btn.open .bar:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); background: var(--accent-primary); }
+        .mobile-menu-btn.open .bar:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+        .mobile-menu-btn.open .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); background: var(--accent-primary); }
+
+        /* --- MOBILE NAV STYLES --- */
+        .nav-links {
+            display: none; 
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 16px 20px; }
+            
+            .nav-links {
+                display: flex; 
+                position: fixed; 
+                top: 0; 
+                left: 0; 
+                width: 100%; 
+                height: 100vh;
+                background: var(--bg-deep);
+                flex-direction: column; 
+                padding: 120px 30px;
+                gap: 30px; 
+                align-items: flex-start;
+                transform: translateX(100%); 
+                transition: transform 0.5s var(--ease-smooth);
+                z-index: 999;
+            }
+            .nav-links.active { transform: translateX(0); } 
+            
+            .nav-links a { font-size: 24px; font-family: var(--font-head); font-weight: 600; color: white; }
+            .nav-cta-item { width: 100%; text-align: center; margin-top: 20px; font-size: 18px !important; }
+        }
+
+        @media (min-width: 769px) {
+            .nav-links { 
+                display: flex; 
+                transform: none; 
+                position: static; 
+                height: auto; 
+                background: transparent; 
+                padding: 0; 
+                flex-direction: row;
+                gap: 40px; 
+                align-items: center;
+            }
+            .mobile-menu-btn { display: none; }
+        }
+
+        /* --- 3. HERO --- */
+        .hero {
+            position: relative; padding: 100px 20px 60px;
+            display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 10;
+        }
+        .hero-bg-wrapper { position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 100%; height: 120%; z-index: -1; pointer-events: none; overflow: hidden; }
+        .hero-wallpaper {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(45, 212, 191, 0.15) 0%, transparent 60%);
+            filter: blur(80px);
+        }
+        
+        .status-badge {
+            background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 8px 20px; border-radius: 100px; font-size: 12px; color: var(--accent-primary);
+            font-weight: 600; margin-bottom: 32px; display: inline-flex; align-items: center; gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .dot { width: 8px; height: 8px; background: var(--accent-primary); border-radius: 50%; box-shadow: 0 0 10px var(--accent-primary); animation: pulse 2s infinite; }
+        
+        h1 {
+            font-family: var(--font-head);
+            font-size: 56px; font-weight: 700; line-height: 1.05; letter-spacing: -2px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #a5b4fc 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 24px; max-width: 900px;
+        }
+        p.subhead { color: var(--text-muted); font-size: 18px; line-height: 1.6; max-width: 540px; margin-bottom: 40px; }
+        
+        .hero-features { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 40px; }
+        .h-tag {
+            font-size: 13px; color: #e2e8f0; background: rgba(255,255,255,0.03);
+            padding: 8px 16px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.08);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .h-tag svg { width: 14px; fill: var(--accent-primary); }
+
+        .cta-row { display: flex; flex-direction: column; gap: 20px; align-items: center; margin-bottom: 60px; width: 100%; justify-content: center; }
+        
+        /* LINK BUTTON 1 (HERO) */
+        .btn-primary {
+            min-width: 200px; padding: 18px 36px; border-radius: 14px; 
+            background: white; color: black;
+            font-family: var(--font-head); font-weight: 700; font-size: 16px;
+            text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 8px;
+            box-shadow: 0 0 40px rgba(255,255,255,0.15);
+            transition: transform 0.3s var(--ease-elastic), box-shadow 0.3s ease;
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 50px rgba(255,255,255,0.3); }
+
+        .hero-visuals { position: relative; width: 100%; max-width: 800px; margin-top: 20px; z-index: 5; }
+        .hero-dashboard-img {
+            width: 100%; height: auto; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.5);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            animation: floatHero 8s ease-in-out infinite;
+        }
+        .float-coin { position: absolute; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); animation: floatCoin 8s ease-in-out infinite; z-index: 10; }
+        .coin-1 { top: -40px; left: -20px; width: 90px; }
+        .coin-2 { top: 30%; right: -30px; width: 100px; animation-delay: 2s; filter: blur(1px); }
+
+        @keyframes floatHero { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes floatCoin { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
+
+        /* --- 4. RATES SECTION --- */
+        .rates-section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 5; }
+        .section-head { text-align: left; margin-bottom: 40px; }
+        .section-head h2 { font-family: var(--font-head); font-size: 42px; color: white; margin-bottom: 12px; font-weight: 700; letter-spacing: -1px; }
+
+        .bento-grid { 
+            display: grid; gap: 24px; 
+            grid-template-columns: 1fr; /* Mobile Default */
+        }
+
+        /* --- DASHBOARD TABLE STYLES --- */
+        .dashboard-list-card {
+            background: rgba(15, 15, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px; padding: 32px;
+            position: relative; overflow: hidden;
+            grid-row: span 2;
+        }
+        .dashboard-header { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .dashboard-header h3 { font-size: 20px; font-family: var(--font-head); color: white; margin-bottom: 4px; }
+        .dashboard-header h3 span { color: var(--accent-primary); }
+        .dashboard-header p { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+        .list-container { display: flex; flex-direction: column; gap: 10px; }
+        
+        .list-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 14px 18px; border-radius: 16px;
+            transition: all 0.2s ease;
+        }
+        .list-row:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            transform: translateX(5px);
+        }
+
+        .row-left { display: flex; align-items: center; gap: 16px; }
+        .icon-wrapper {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: #000; border: 2px solid rgba(255,255,255,0.1);
+            overflow: hidden; flex-shrink: 0;
+        }
+        .icon-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .exchange-pair { display: flex; flex-direction: column; }
+        .exchange-pair span { font-size: 14px; font-weight: 700; color: #e1e1e6; }
+        .exchange-pair .sub-text { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .arrow { color: var(--text-muted); margin: 0 4px; font-size: 12px; }
+
+        .rate-pill {
+            min-width: 90px; padding: 8px 14px; border-radius: 10px;
+            font-size: 13px; font-weight: 800; text-align: center;
+            background: rgba(0, 240, 255, 0.1); color: var(--accent-primary);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.05);
+        }
+        .rate-pill.orange {
+            background: rgba(255, 94, 58, 0.1); color: var(--accent-orange);
+            border: 1px solid rgba(255, 94, 58, 0.2);
+            box-shadow: 0 0 15px rgba(255, 94, 58, 0.05);
+        }
+
+        .table-footer-note {
+            font-size: 12px; color: var(--text-muted); margin-top: 25px; 
+            text-align: center; padding-top: 20px; 
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: rgba(15, 15, 20, 0.6); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .stat-label { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 10px; }
+        .stat-value { font-family: var(--font-head); font-size: 40px; font-weight: 700; color: white; letter-spacing: -1px; text-shadow: 0 0 30px rgba(0,240,255,0.2); }
+        .stat-desc { font-size: 14px; color: #666; margin-top: 5px; }
+
+        /* LINK BUTTON 2 (BELOW EXCHANGE NOW) */
+        .mid-cta-btn {
+            background: linear-gradient(135deg, var(--accent-telegram), #0088cc); color: white;
+            padding: 20px; border-radius: 18px; text-align: center; display: block;
+            margin-top: 30px; font-family: var(--font-head); font-weight: 700; text-decoration: none;
+            box-shadow: 0 15px 40px rgba(34, 158, 217, 0.25);
+            transition: all 0.3s var(--ease-elastic); font-size: 18px;
+        }
+        .mid-cta-btn:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(34, 158, 217, 0.4); }
+
+.secondary-link-btn {
+    display: flex;               /* Changed from inline-flex to flex */
+    align-items: center; 
+    justify-content: center;
+    gap: 6px; 
+    margin-top: 20px;
+    color: var(--text-muted); 
+    font-size: 14px; 
+    line-height: 1;
+    text-decoration: none; 
+    border-bottom: 1px solid transparent; 
+    width: max-content;          /* Ensures it doesn't stretch */
+    margin-inline: auto;         /* This now forces it to the center */
+    transition: all 0.2s ease;
+}
+
+.secondary-link-btn:hover { 
+    color: white; 
+    border-color: var(--accent-primary); 
+    gap: 10px; 
+}
+
+        /* --- MARQUEE (TESTIMONIALS) --- */
+        .marquee-wrap {
+            overflow: hidden; padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0,0,0,0.2); margin-top: 80px; position: relative; z-index: 5;
+            
+            /* ADDED THIS TO CENTER THE BUTTON */
+            text-align: center; 
+        }
+        .marquee-track { display: flex; gap: 24px; width: max-content; animation: scroll 40s linear infinite; }
+        .t-card { 
+            width: 300px; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 24px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            text-align: left; /* Keep card text aligned left */
+        }
+        .t-text { font-size: 14px; color: #cbd5e1; font-style: italic; margin-bottom: 12px; line-height: 1.5; }
+        .t-user { font-size: 11px; color: var(--accent-telegram); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- MOCK LOGOS SECTION --- */
+        .trusted-section {
+            padding: 60px 0; text-align: center;
+            background: rgba(0,0,0,0.3);
+        }
+        .trust-title { font-size: 12px; text-transform: uppercase; color: #555; letter-spacing: 2px; margin-bottom: 30px; }
+        .logos-wrap {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 40px;
+            opacity: 0.6; filter: grayscale(100%); transition: 0.3s;
+        }
+        .logos-wrap:hover { opacity: 1; filter: grayscale(0%); }
+        
+        .ml-icon { 
+            width: 24px; 
+            height: 24px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .ml-icon svg { width: 100%; height: 100%; fill: currentColor; }
+
+        .mock-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: 700; font-size: 18px; color: white; }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 20px; background: #010101; border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 80px 20px 40px; position: relative; overflow: hidden; z-index: 5;
+        }
+        .footer-cta {
+            background: linear-gradient(135deg, rgba(45,212,191,0.05), rgba(0,0,0,0.4));
+            border: 1px solid rgba(45,212,191,0.15); border-radius: 30px; padding: 50px 20px;
+            text-align: center; margin-bottom: 60px;
+        }
+        /* LINK BUTTON 3 (CTA) */
+        .f-cta-btn { 
+            background: white; color: black; padding: 14px 32px; border-radius: 100px; 
+            text-decoration: none; font-weight: 700; display: inline-block; margin-top: 24px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: 0.3s var(--ease-elastic);
+        }
+        .f-cta-btn:hover { transform: scale(1.05); }
+
+        .f-links { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 20px; margin-bottom: 60px; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        .f-col h4 { font-size: 12px; color: white; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; opacity: 0.6; }
+        .f-col a { display: block; color: #888; text-decoration: none; font-size: 14px; margin-bottom: 12px; transition: color 0.2s; }
+        .f-col a:hover { color: var(--accent-primary); }
+
+        /* LINK BUTTON 4 (FOOTER) */
+        .footer-action-btn {
+            display: inline-block; margin-top: 10px;
+            padding: 8px 16px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;
+            color: white; text-decoration: none; font-size: 12px; transition: 0.2s;
+        }
+        .footer-action-btn:hover { background: white; color: black; }
+
+        .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px; text-align: center; font-size: 12px; color: #444; }
+
+        /* Desktop Layouts */
+        @media (min-width: 900px) {
+            h1 { font-size: 72px; }
+            .hero, .rates-section, .footer-content { max-width: 1200px; margin: 0 auto; }
+            .cta-row { flex-direction: row; width: auto; max-width: none; }
+            .btn-primary { width: auto; padding: 18px 48px; }
+            
+            .bento-grid { 
+                grid-template-columns: 1.5fr 1fr; 
+                grid-template-rows: auto auto; 
+                gap: 30px; 
+            }
+            .dashboard-list-card { grid-column: 1; grid-row: 1 / span 3; }
+            
+            .mid-cta-btn { width: auto; padding: 22px 60px; margin-left: auto; margin-right: auto; max-width: 400px; }
+            .f-links { grid-template-columns: 2fr 1fr 1fr 1fr; }
+        }
+
+        /* Ambient background floaters */
+        .ambient-coin {
+            position: absolute; z-index: 0; pointer-events: none; opacity: 0.8;
+            filter: drop-shadow(0 0 40px rgba(45, 212, 191, 0.15));
+            animation: floatAmbient 12s ease-in-out infinite;
+        }
+        .ac-1 { top: 10%; left: -2%; width: 120px; animation-delay: 1s; filter: blur(2px); }
+        .ac-2 { top: 35%; right: -2%; width: 140px; animation-delay: 3s; filter: blur(4px); }
+
+        @keyframes floatAmbient {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(8deg); }
+        }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">
+            <img src="https://i.ibb.co/cKbtPx2S/IMG-20260201-010407.webp" alt="XE Logo" class="logo-img">
+            Exchngers
+        </a>
+        
+        <div class="nav-links" id="navLinks">
+            <a href="#rates">Rates</a>
+            <a href="#kullu">Trust</a>
+            <a href="#vouches">Vouches</a>
+            <a href="https://t.me/exchngers" class="nav-cta-item">Exchange Now</a>
+                <a href="/index.html" class="secondary-link-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="margin-top: -1px;">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+                socialworks.in
+            </a>
+   </div>
+
+        <div class="mobile-menu-btn" id="menuBtn">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            
+        </div>
+    </nav>
+
+    <main class="hero">
+        <div class="hero-bg-wrapper">
+            <div class="hero-wallpaper"></div>
+        </div>
+        <img src="https://i.ibb.co/pBQdgQCV/IMG-20260131-235850-removebg-preview.webp" class="ambient-coin ac-1">
+        <img src="https://i.ibb.co/21RKFW61/IMG-20260131-235933-removebg-preview.webp" class="ambient-coin ac-2">
+
+        <div class="status-badge"><div class="dot"></div>Part Of Socialworks.in</div>
+        <h1>Premier Crypto<br>Exchange.</h1>
+        <p class="subhead">Instant settlement for USDT, Bitcoin, and TON. We process INR, PayPal, Zelle & Chime transfers securely.</p>
+        
+        <div class="hero-features">
+            <div class="h-tag">No KYC</div>
+            <div class="h-tag">Instant INR</div>
+            <div class="h-tag">24/7 Human Support</div>
+        </div>
+
+        <div class="cta-row">
+            <a href="https://t.me/exchngers" class="btn-primary">Start Exchange</a>
+            <a href="/index.html" class="secondary-link-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="margin-top: -1px;">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+                socialworks.in
+            </a>
+        </div>
+
+        <div class="hero-visuals">
+            <img src="https://i.ibb.co/zhG35TJX/x.jpg" class="hero-dashboard-img" alt="Exchange Dashboard">
+            <img src="https://i.ibb.co/1GH1hVFf/x.jpg" class="float-coin coin-1">
+            <img src="https://i.ibb.co/9myswJbv/IMG-20260201-000018-removebg-preview.webp" class="float-coin coin-2">
+        </div>
+    </main>
+
+    <section class="rates-section" id="rates">
+        <div class="section-head">
+            <h2>Live Market & Fees</h2>
+            <p>Real-time exchange rates updated every minute.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="dashboard-list-card">
+                <div class="dashboard-header">
+                    <h3>@exchngers <span>Service</span></h3>
+                    <p>Secure Automatic Exchange • 24/7</p>
+                </div>
+
+                <div class="list-container">
+                    <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://i.ibb.co/MDchbT83/CITYPNG-COM-HD-Round-Btc-Logo-Icon-PNG-2500x2500.webp" alt="BTC"></div>
+                            <div class="exchange-pair">
+                                <span>Crypto <span class="arrow">➜</span> Crypto</span>
+                                <span class="sub-text">Instant Swap</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill">3%</div>
+                    </div>
+                    <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON"></div>
+                            <div class="exchange-pair">
+                                <span>Crypto <span class="arrow">➜</span> Ton</span>
+                                <span class="sub-text">The Open Network</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill">2%</div>
+                    </div>
+                    <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://cdn-icons-png.flaticon.com/512/25/25228.png" style="filter: invert(1);" alt="INR"></div>
+                            <div class="exchange-pair">
+                                <span>Crypto <span class="arrow">➜</span> Ruppes</span>
+                                <span class="sub-text">Bank Transfer</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill orange">₹91 / $</div>
+                    </div>
+                    <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://i.ibb.co/MDchbT83/CITYPNG-COM-HD-Round-Btc-Logo-Icon-PNG-2500x2500.webp" alt="BTC"></div>
+                            <div class="exchange-pair">
+                                <span>Ruppes <span class="arrow">➜</span> Crypto</span>
+                                <span class="sub-text">Buy Crypto</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill orange">₹94 / $</div>
+                    </div>
+                    <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://i.ibb.co/sptKJTP1/CITYPNG-COM-Pay-Pal-Round-Blue-Icon-Transparent-Background-2000x2000.webp" alt="Paypal"></div>
+                            <div class="exchange-pair">
+                                <span>Paypal <span class="arrow">➜</span> Crypto</span>
+                                <span class="sub-text">Wallet Exchange</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill">8%</div>
+                    </div>
+                     <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://i.ibb.co/sptKJTP1/CITYPNG-COM-Pay-Pal-Round-Blue-Icon-Transparent-Background-2000x2000.webp" alt="Paypal"></div>
+                            <div class="exchange-pair">
+                                <span>Crypto <span class="arrow">➜</span> Paypal</span>
+                                <span class="sub-text">Withdrawal</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill">3%</div>
+                    </div>
+                    <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://i.ibb.co/fcsDGpw/CITYPNG-COM-Zelle-Round-Logo-Icon-PNG-5000x5000.webp" alt="Zelle"></div>
+                            <div class="exchange-pair">
+                                <span>Zelle <span class="arrow">➜</span> Crypto</span>
+                                <span class="sub-text">Instant</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill">2.5%</div>
+                    </div>
+                    <div class="list-row">
+                        <div class="row-left">
+                            <div class="icon-wrapper"><img src="https://i.ibb.co/ycWfr61C/download.webp" alt="Chime"></div>
+                            <div class="exchange-pair">
+                                <span>Chime <span class="arrow">➜</span> Crypto</span>
+                                <span class="sub-text">Mobile Bank</span>
+                            </div>
+                        </div>
+                        <div class="rate-pill">2%</div>
+                    </div>
+                </div>
+
+                <div class="table-footer-note">
+                    ℹ️ $1 minimum fees on all exchange
+                </div>
+            </div>
+
+            <div class="stat-card" id="kullu" >
+                <div class="stat-label">Total Exchanged</div>
+                <div class="stat-value">$100k+</div>
+                <div class="stat-desc">Processed securely across 5,000+ orders.</div>
+            </div>
+            
+            <div class="stat-card" style="background: linear-gradient(135deg, rgba(45,212,191,0.1), rgba(0,0,0,0.4)); border-color:var(--accent-primary);">
+                <div class="stat-label" style="color:var(--accent-primary);">US Banking</div>
+                <div class="stat-value">Instant</div>
+                <div class="stat-desc">Zelle, Chime, & CashApp supported.</div>
+            </div>
+
+            <div class="stat-card">
+                 <div class="stat-label">Total Exchanges</div>
+                 <div class="stat-value"><span id="exchange-count">0</span>+</div>
+                 <div class="stat-desc">Successful transactions this month.</div>
+            </div>
+        </div>
+
+        <a href="https://t.me/exchngers" class="mid-cta-btn">Exchange Now</a>
+
+
+    </section>
+
+    <div class="marquee-wrap" id="vouches">
+        <div class="marquee-track">
+            <div class="t-card"><div class="t-text">"Fastest USDT to INR settlement. 3 mins flat."</div><div class="t-user">CryptoKing_99</div></div>
+            <div class="t-card"><div class="t-text">"Manual verification ensures safe PayPal exchanges."</div><div class="t-user">SarahTrades</div></div>
+            <div class="t-card"><div class="t-text">"Best rates for INR withdrawals. Beats Binance P2P."</div><div class="t-user">WhaleAlert</div></div>
+            <div class="t-card"><div class="t-text">"Clean process. Zelle to Bitcoin transfer was instant."</div><div class="t-user">DevOps_Mike</div></div>
+            <div class="t-card"><div class="t-text">"Fastest USDT to INR settlement. 3 mins flat."</div><div class="t-user">CryptoKing_99</div></div>
+            <div class="t-card"><div class="t-text">"Manual verification ensures safe PayPal exchanges."</div><div class="t-user">SarahTrades</div></div>
+        </div>
+        <a href="https://t.me/exchged" class="secondary-link-btn">
+            View All Vouches
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </a>
+    </div>
+
+    <div class="trusted-section" id="trust">
+        <div class="trust-title">Trusted by High Volume Traders</div>
+        <div class="logos-wrap">
+            <div class="mock-logo ml-1">
+                <div class="ml-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                Vorto
+            </div>
+            <div class="mock-logo ml-2">
+                <div class="ml-icon">
+                    <svg viewBox="0 0 24 24"><path d="M4 16c0 1.1.9 2 2 2h1v2c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2v-2h1c1.1 0 2-.9 2-2H4zm14-5h-1V9c0-1.1-.9-2-2-2h-6c-1.1 0-2 .9-2 2v2H6c-1.1 0-2 .9-2 2v3h16v-3c0-1.1-.9-2-2-2zM8 9h8v2H8V9z"/></svg>
+                </div>
+                Kynetix
+            </div>
+            <div class="mock-logo ml-3">
+                <div class="ml-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.5L18.5 19H5.5L12 5.5z"/></svg>
+                </div>
+                Spectra
+            </div>
+            <div class="mock-logo ml-4">
+                <div class="ml-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11h-4v4h-2v-4H6v-2h4V7h2v4h4v2z"/></svg>
+                </div>
+                Nexis
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-cta">
+            <h2 class="f-cta-h2">Grow your business</h2>
+            <p style="color:#999; font-size:16px;">Join 15,000+ traders converting INR, USD, and Crypto.</p>
+            <a href="https://t.me/voucheie" class="f-cta-btn">Get Started</a>
+            <a href="/index.html" class="secondary-link-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="margin-top: -1px;">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+                socialworks.in
+            </a>
+        </div>
+
+        <div class="f-links">
+            <div class="f-col">
+                <div class="logo" style="margin-bottom:16px;">
+                    <img src="https://i.ibb.co/cKbtPx2S/IMG-20260201-010407.webp" style="height:24px;"> Exchngers
+                </div>
+                <p style="color:#666; font-size:14px; line-height:1.5;">Secure crypto exchange.</p>
+                <a href="#" class="footer-action-btn">Socialworks.in : SM Expert's</a>
+            </div>
+            <div class="f-col">
+                <h4>Exchange</h4>
+                <a href="#rates">Rates</a>
+                <a href="#kullu">Trust</a>
+                <a href="#vouches">Vouches</a>
+            </div>
+            <div class="f-col">
+                <h4>Support</h4>
+                <a href="https://t.me/voucheie">Official Telegram</a>
+                <a href="#">socialworks.in</a>
+            </div>
+            <div class="f-col">
+                <h4>Contact Admins</h4>
+                <a href="https://t.me/plugingz" target="_blank" style="color:white; font-weight:600;">@plugin</a>
+                <a href="t.me/itnic" target="_blank" style="color:white; font-weight:600;">@kaen</a>
+            </div>
+        </div>
+
+        <div class="f-bottom">
+            <div>© 2026 Exchngers Under Socialworks. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // FUNCTIONAL HAMBURGER MENU
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('open');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('open');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Exchange Count Animation
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        const target = document.getElementById("exchange-count");
+        if (target) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        animateValue(target, 0, 500, 2000);
+                        observer.disconnect();
+                    }
+                });
+            });
+            observer.observe(target);
+        }
+    </script>
+
+</body>
+              </html>
